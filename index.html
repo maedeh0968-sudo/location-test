@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Location Test</title>
+</head>
+<body>
+
+<h2>آزمایش IP و موقعیت</h2>
+
+<p id="ip">در حال دریافت IP...</p>
+
+<button onclick="getLocation()">نمایش موقعیت من</button>
+
+<p id="location">هنوز موقعیت دریافت نشده.</p>
+
+<script>
+fetch("https://api.ipify.org?format=json")
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById("ip").innerText =
+      "IP عمومی شما: " + data.ip;
+  })
+  .catch(() => {
+    document.getElementById("ip").innerText =
+      "دریافت IP انجام نشد.";
+  });
+
+function getLocation() {
+  if (!navigator.geolocation) {
+    document.getElementById("location").innerText =
+      "مرورگر از موقعیت مکانی پشتیبانی نمی‌کند.";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    function(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const accuracy = position.coords.accuracy;
+
+      document.getElementById("location").innerHTML =
+        "Latitude: " + lat +
+        "<br>Longitude: " + lon +
+        "<br>Accuracy: حدود " + accuracy + " متر";
+    },
+    function() {
+      document.getElementById("location").innerText =
+        "اجازه موقعیت داده نشد یا موقعیت قابل دریافت نیست.";
+    }
+  );
+}
+</script>
+
+</body>
+</html>
